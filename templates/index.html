@@ -1,11 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M3M3KRU</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block content %} 
 
     {% for upload in uploads %}
         {{ upload.category_name }}<br>
@@ -14,6 +8,5 @@
         {{ upload.upload_image }}<br>
         {{ upload.upload_time }}<br>
     {% endfor %}
-    
-</body>
-</html>
+
+{% endblock %}
