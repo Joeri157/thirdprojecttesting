@@ -81,7 +81,7 @@ To put a smile on people’s faces daily
 [Comments](planning/wireframes/comments-mobile.png)
 
 ### Database schema :
-- [full-schema](planning/test.pdf)
+- [full-schema](planning/database_schema/test.pdf)
 - [users](planning/database_schema/users-schema.png)
 - [categories](planning/database_schema/categories-schema-png)
 - [uploads](planning/database_schema/uploads-schema.png)
