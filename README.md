@@ -1,6 +1,6 @@
 <img src="https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png" style="margin: 0;">
 
-Welcome USER_NAME,
+Welcome Joeri157,
 
 This is the Code Institute student template for Gitpod. We have preinstalled all of the tools you need to get started. You can safely delete this README.md file, or change it for your own project. Please do read it at least once, though! It contains some important information about Gitpod and the extensions we use.
 
@@ -43,3 +43,86 @@ We continually tweak and adjust this template to help give you the best experien
 --------
 
 Happy coding!
+
+
+<h1 align="center">
+Milestone Project 3 - M3M3KRU <br> Joeri van den Kieboom
+</h1>
+<div align="center">
+
+## Overview
+Simple internet forum, where you are able to post anything funny and many more… <br>
+To put a smile on people’s faces daily
+</div>
+
+## UX <hr>
+
+### Documentation for planning
+- [Click here!]() to go to planning folder map
+- [Click here!]() to go to documentation
+
+### Wireframes :
+- [homepage]()
+- [extended-homepage]()
+- [login]()
+- [sign-up]()
+- [add-post]()
+- [edit-post]()
+
+### Database schema :
+- [users]()
+- [categories]()
+- [uploads]()
+- [comments]()
+
+
+### User Stories
+| *As an User :* |
+|---|
+|I can use the site without being logged in.
+|I can register to make an account in order to acces the websites features
+|I can add, edit and delete my own uploads
+|I'm able to search for uploaded/created content
+|I can comment on content
+|I can edit/ delete my comments
+
+## Features <hr>
+
+### Existing features
+-	The site is usable for guests and logged in users, however, some features are only useable to logged in users
+-	The lasted uploaded post will be schown on the website.
+
+#### Guests
+-	They are able to use the search navigation to search for categories/posts, if the value that is put in matches any of the posts.
+-	Have the option to sign up and create an account, they will need to fill in their details in order to use the website (First-Name, Last-Name, UserName, Password, etc)
+
+#### Members
+-	They are able to Create, Edit and Delete their own comments and/or posts.
+-	They are able to upvote post or comments which they find the best/funniest etc.
+
+### Future features
+-	Favorites; where people are able to check their uploads that they favored
+-	Videos; where people are able to add videos as uploads
+-	User Accounts; that they are able to change their password and update their info
+-	Confirmation by mail; so they receive an email when they create a new account, and this is also usable when they forgot their password.
+
+## Technologies<hr>
+### The website is designed by the following technologies :
+- blank
+
+## Testing <hr>
+|Test Cases |Status |Issues|
+| --- | --- | --- |
+|Blank | blank | blank
+
+
+## Deployment <hr>
+- blank
+
+## Credits
+
+### Content
+- blank
+
+### Code references/ Acknowledgements
+- blank
