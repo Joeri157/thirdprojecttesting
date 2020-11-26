@@ -55,19 +55,30 @@ Simple internet forum, where you are able to post anything funny and many more�
 To put a smile on people’s faces daily
 </div>
 
-## UX <hr>
+## UX
 
 ### Documentation for planning
-- [Click here!]() to go to planning folder map
-- [Click here!]() to go to documentation
+- [Click here!](/planning) to go to planning folder map
+- [Click here!](/planning/project-ideas.pdf) to go to documentation
 
 ### Wireframes :
-- [homepage]()
-- [extended-homepage]()
-- [login]()
-- [sign-up]()
-- [add-post]()
-- [edit-post]()
+**Desktop :** <br>
+[homepage](planning/wireframes/comments-desktop.png) <br>
+[extended-homepage](planning/wireframes/extended-homepage-dekstop.png) <br>
+[login](planning/wireframes/login-desktop.png) <br>
+[signup](planning/wireframes/signup-desktop.png) <br>
+[upload](planning/wireframes/upload-desktop.png) <br>
+[edit](planning/wireframes/edit-desktop.png) <br>
+[Comments](planning/wireframes/comments-desktop.png)
+
+**Mobile :** <br>
+[homepage](planning/wireframes/comments-mobile.png) <br>
+[extended-homepage](planning/wireframes/extended-homepage-mobile.png) <br>
+[login](planning/wireframes/login-mobile.png) <br>
+[signup](planning/wireframes/signup-mobile.png) <br>
+[upload](planning/wireframes/upload-mobile.png) <br>
+[edit](planning/wireframes/edit-mobile.png) <br>
+[Comments](planning/wireframes/comments-mobile.png)
 
 ### Database schema :
 - [users]()
@@ -84,21 +95,25 @@ To put a smile on people’s faces daily
 |I can add, edit and delete my own uploads
 |I'm able to search for uploaded/created content
 |I can comment on content
-|I can edit/ delete my comments
+|I can edit/ delete my comment
 
-## Features <hr>
+## Features
 
 ### Existing features
 -	The site is usable for guests and logged in users, however, some features are only useable to logged in users
--	The lasted uploaded post will be schown on the website.
+-	The lasted uploaded post will be shown on the website.
 
 #### Guests
--	They are able to use the search navigation to search for categories/posts, if the value that is put in matches any of the posts.
--	Have the option to sign up and create an account, they will need to fill in their details in order to use the website (First-Name, Last-Name, UserName, Password, etc)
+- Able to scroll through content
+- Able to see comments posted on content	
+- They are able to use the search navigation to search for categories/posts, if the value that is put in matches any of the content.
+- Have the option to sign up and create an account, they will need to fill in their details in order to use the website (First-Name, Last-Name, UserName, Password, etc)  
 
 #### Members
--	They are able to Create, Edit and Delete their own comments and/or posts.
--	They are able to upvote post or comments which they find the best/funniest etc.
+- Able to Create, Edit and Delete own uploads
+- Able to Create, Edit and Delete own comments
+- Able to comment on other users their uploads
+- Able to add extra categorie if it didn't exist yet
 
 ### Future features
 -	Favorites; where people are able to check their uploads that they favored
@@ -106,11 +121,11 @@ To put a smile on people’s faces daily
 -	User Accounts; that they are able to change their password and update their info
 -	Confirmation by mail; so they receive an email when they create a new account, and this is also usable when they forgot their password.
 
-## Technologies<hr>
+## Technologies
 ### The website is designed by the following technologies :
 - blank
 
-## Testing <hr>
+## Testing
 |Test Cases |Status |Issues|
 | --- | --- | --- |
 |Blank | blank | blank
