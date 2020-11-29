@@ -8,6 +8,7 @@ from flask import (
     redirect, request, session, url_for)
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
+from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 if os.path.exists("env.py"):
     import env
@@ -37,7 +38,7 @@ mongo = PyMongo(app)
 @app.route("/")  # refers to the default route
 @app.route("/index")
 def index():
-    uploads = mongo.db.uploads.find()
+    uploads = list(mongo.db.uploads.find())
     return render_template("index.html", uploads=uploads)
 
 
@@ -68,7 +69,7 @@ def register():
         session["user"] = request.form.get("username").lower()
         flash("Sing Up Succesfull, {}".format(request.form.get("username")))
         return redirect(url_for("profile", username=["user"]))
-        
+
     return render_template("register.html")
 
 
@@ -130,6 +131,76 @@ def logout():
     flash("You have been logged out")
     session.pop("user")
     return redirect(url_for("login"))
+
+
+#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
+#  Add Upload                                                                 #
+#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
+
+@app.route("/add_upload", methods=["GET", "POST"])
+def add_upload():
+    if request.method == "POST":
+        upload = {
+            "category_name": request.form.get("catergory_name"),
+            "upload_title": request.form.get("upload_title"),
+            "upload_description": request.form.get("upload_description"),
+            "upload_image": request.form.get("upload_image"),
+            "upload_time": datetime.now().strftime("%Y-%m-%d, %H:%M"),
+            "uploaded_by": session["user"]
+            }
+        mongo.db.uploads.insert_one(upload)
+        flash(
+            "Congratulations {}, upload was succesfull!".format(session["user"]
+            ))
+        return redirect(url_for("index"))
+
+    return render_template("add_upload.html")
+
+
+#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
+#  Edit Upload                                                                #
+#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
+
+@app.route("/edit_upload/<upload_id>", methods=["GET", "POST"])
+def edit_upload(upload_id):
+    if request.method == "POST":
+        edit_upload = {
+            "category_name": request.form.get("catergory_name"),
+            "upload_title": request.form.get("upload_title"),
+            "upload_description": request.form.get("upload_description"),
+            "upload_image": request.form.get("upload_image"),
+            "upload_time": datetime.now().strftime("%Y-%m-%d, %H:%M"),
+            "uploaded_by": session["user"]
+            }
+        mongo.db.uploads.update({"_id": ObjectId(upload_id)}, edit_upload)
+        flash(
+            "Well done {},upload succesfully updated!".format(session["user"]))
+        return redirect(url_for("index"))
+
+    upload = mongo.db.uploads.find_one({"_id": ObjectId(upload_id)})
+    return render_template("edit_upload.html", upload=upload)
+
+
+#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
+#  Delete Upload                                                              #
+#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
+
+@app.route("/delete_upload/<upload_id>")
+def delete_upload(upload_id):
+    mongo.db.uploads.remove({"_id": ObjectId(upload_id)})
+    flash("Upload succesfully deleted")
+    return redirect(url_for("index"))
+
+
+#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
+#  Upload on a single page                                                    #
+#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
+
+@app.route("/upload_page/<upload_id>", methods=["GET"])
+def upload_page(upload_id):
+    uploads = list(mongo.db.uploads.find({"_id": ObjectId(upload_id)}))
+    return render_template("upload.html", uploads=uploads)
+
 
 #  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
 #  Development/Production environment test for debug                          #
