@@ -9,6 +9,7 @@ from flask import (
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from datetime import datetime
+from filestack import Client
 from werkzeug.security import generate_password_hash, check_password_hash
 if os.path.exists("env.py"):
     import env
@@ -25,10 +26,7 @@ app.secret_key = os.environ.get("SECRET_KEY")
 
 mongo = PyMongo(app)
 
-
-#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
-#  Variables                                                                  #
-#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
+client = Client("AYGc8VBXRTGi7hUQdYZnIz")
 
 
 #  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
@@ -38,7 +36,8 @@ mongo = PyMongo(app)
 @app.route("/")  # refers to the default route
 @app.route("/index")
 def index():
-    uploads = list(mongo.db.uploads.find())
+    uploads = list(
+        mongo.db.uploads.find().sort("upload_time", -1))  # .limit(2)
     return render_template("index.html", uploads=uploads)
 
 
@@ -116,7 +115,9 @@ def profile(username):
         {"username": session["user"]})["username"]
 
     if session["user"]:
-        return render_template("profile.html", username=username)
+        uploads = list(mongo.db.uploads.find())
+        return render_template(
+            "profile.html", username=username, uploads=uploads)
 
     return redirect(url_for("login"))
 
@@ -149,9 +150,8 @@ def add_upload():
             "uploaded_by": session["user"]
             }
         mongo.db.uploads.insert_one(upload)
-        flash(
-            "Congratulations {}, upload was succesfull!".format(session["user"]
-            ))
+        flash("Congratulations {}, upload was succesfull!".format(
+                session["user"]))
         return redirect(url_for("index"))
 
     return render_template("add_upload.html")
@@ -161,23 +161,25 @@ def add_upload():
 #  Edit Upload                                                                #
 #  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
 
-@app.route("/edit_upload/<upload_id>", methods=["GET", "POST"])
-def edit_upload(upload_id):
+@app.route("/edit_upload/<id>", methods=["GET", "POST"])
+def edit_upload(id):
+    upload = mongo.db.uploads.find_one({"_id": ObjectId(id)})
     if request.method == "POST":
-        edit_upload = {
-            "category_name": request.form.get("catergory_name"),
-            "upload_title": request.form.get("upload_title"),
-            "upload_description": request.form.get("upload_description"),
-            "upload_image": request.form.get("upload_image"),
-            "upload_time": datetime.now().strftime("%Y-%m-%d, %H:%M"),
-            "uploaded_by": session["user"]
-            }
-        mongo.db.uploads.update({"_id": ObjectId(upload_id)}, edit_upload)
+        mongo.db.uploads.update_one(
+            {"_id": ObjectId(id)},
+            {"$set": {
+                "category_name": request.form.get("catergory_name"),
+                "upload_title": request.form.get("upload_title"),
+                "upload_description": request.form.get("upload_description"),
+                "upload_image": request.form.get("upload_image"),
+                "upload_time": datetime.now().strftime("%Y-%m-%d, %H:%M"),
+                "uploaded_by": session["user"]
+            }}
+        )
         flash(
             "Well done {},upload succesfully updated!".format(session["user"]))
         return redirect(url_for("index"))
 
-    upload = mongo.db.uploads.find_one({"_id": ObjectId(upload_id)})
     return render_template("edit_upload.html", upload=upload)
 
 
@@ -185,21 +187,97 @@ def edit_upload(upload_id):
 #  Delete Upload                                                              #
 #  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
 
-@app.route("/delete_upload/<upload_id>")
-def delete_upload(upload_id):
-    mongo.db.uploads.remove({"_id": ObjectId(upload_id)})
+@app.route("/delete_upload/<id>")
+def delete_upload(id):
+    mongo.db.uploads.remove({"_id": ObjectId(id)})
     flash("Upload succesfully deleted")
     return redirect(url_for("index"))
+
+
+#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
+#  Add a comment                                                              #
+#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
+
+@app.route("/add_comment/<id>", methods=["GET", "POST"])
+def add_comment(id):
+    upload = mongo.db.uploads.find_one({"_id": ObjectId(id)})
+    new_comment = {
+        "comment_by": session["user"],
+        "comment_time": datetime.now().strftime("%Y-%m-%d, %H:%M"),
+        "comment_description": request.form.get("comment_description")
+    }
+
+    if request.method == "POST":
+        mongo.db.uploads.update_one(
+            {"_id": ObjectId(id)},
+            {"$push": {"comments": new_comment}}
+        )
+        return redirect(request.referrer)
+
+    return render_template(request.referrer, upload=upload)
+
+
+#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
+#  Edit Comment                                                               #
+#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
+
+@app.route("/edit_comment/<id>", methods=["GET", "POST"])
+def edit_comment(id):
+    if request.method == "POST":
+        mongo.db.uploads.update_one(
+            {"_id": ObjectId(id)},
+            {"$set": {"comments": [{
+                "comment_by": session["user"],
+                "comment_time": datetime.now().strftime("%Y-%m-%d, %H:%M"),
+                "comment_description": request.form.get(
+                    "comment_description")}]}})
+        flash("Comment succesfully changed")
+        return redirect(request.referrer)
+    return redirect(request.referrer)
+
+
+#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
+#  Delete Comment                                                             #
+#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
+
+@app.route("/delete_comment/<id>")
+def delete_comment(id):
+    mongo.db.uploads.update_one(
+        {"_id": ObjectId(id)},
+        {"$pull": {"comments": {
+            "comment_by": session["user"]}}})
+    flash("Comment succesfully deleted")
+    return redirect(request.referrer)
+
+
+#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
+#  Categories                                                                 #
+#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
+
+@app.route("/all_categories")
+def all_categories():
+    uploads = mongo.db.uploads.find().sort("category_name", 1)
+    return render_template("all_categories.html", uploads=uploads)
+
+
+#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
+#  Browse categories                                                          #
+#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
+
+@app.route("/category_page/<upload_id>", methods=["GET"])
+def category_page(upload_id):
+    uploads = list(mongo.db.uploads.find({"_id": ObjectId(upload_id)}))
+    return render_template("category.html", uploads=uploads)
 
 
 #  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
 #  Upload on a single page                                                    #
 #  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
 
-@app.route("/upload_page/<upload_id>", methods=["GET"])
-def upload_page(upload_id):
-    uploads = list(mongo.db.uploads.find({"_id": ObjectId(upload_id)}))
-    return render_template("upload.html", uploads=uploads)
+@app.route("/upload_page/<id>", methods=["GET", "POST"])
+def upload_page(id):
+    upload = mongo.db.uploads.find_one({"_id": ObjectId(id)})
+    return render_template("upload.html", upload=upload)
 
 
 #  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
