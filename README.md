@@ -5,7 +5,8 @@ Milestone Project 3 - M3M3KRU <br> Joeri van den Kieboom
 
 ## Overview
 Simple internet forum, where you are able to post anything funny and many more… <br>
-To put a smile on people’s faces daily
+To put a smile on people’s faces daily <br>
+[Click here!](https://thirdmilestoneproject-m3m3kru.herokuapp.com/) to go to website
 </div>
 
 ## UX
@@ -79,19 +80,18 @@ To put a smile on people’s faces daily
 ### The website is designed by the following technologies :
 - blank
 
-## Testing
-|Test Cases |Status |Issues|
-| --- | --- | --- |
-|Blank | blank | blank
+<div align="center">
 
+# Unfinished project, due to screwing my own schedule in the extra days that i got.
 
-## Deployment
-- blank
+## I screw up my time schedule, eventually i had more work then i thought i would've if you read this you will see that this isn't finished, because i have to submit it. <br>
+## My Apologies, i know i will fail this project, so i'm going to keep working on it and resubmit it next week (sunday). <br>
 
-## Credits
+## I'm also going to continue with the program and start my fourth project by the end of the upcoming week, so i could try and finish it before christmas. <br>
+## My apologies again for this, and i know i need to pay 50 euro's for resubmission. <br>
+## I've also screwed up my commits, and i wanted to fix that past weekend. but i didn't have time for it. <br>
+## I really want to finish this course.
 
-### Content
-- blank
-
-### Code references/ Acknowledgements
-- blank
+## 4th project before Christmas / New year <br>
+## Resubmisson second project between christmas and new / year (maybe in the first week of january) <br>
+</div>
