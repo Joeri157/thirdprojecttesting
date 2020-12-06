@@ -1,17 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
 
-    <h3 class="light-blue center-align">Add Upload</h3>
+    <h3 class="#ffa726 orange lighten-1 center-align">Add Upload</h3>
 
 <!--------------------  Adding Upload -------------------->
     <div class="row">
         <form class="col s12 m8 offset-m2" method="POST" action="{{ url_for('add_upload') }}">
 <!--------------------  Category Name -------------------->
-            <div class="row">
+            <div class="row">            
                 <div class="input-field col s12">
-                    <input id="catergory_name" name="catergory_name"
-                        type="text" class="validate" required>
-                    <label for="catergory_name">Category Name</label>
+                    <select id="catergory_name" name="catergory_name" class="validate" required>
+                        <option value="" disabled selected>Choose Category</option>
+                        {% for category in categories %}
+                            <option value="{{ category.category_name}}">{{ category.category_name}}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="catergory_name">Upload Category</label>
                 </div>
             </div>
 <!--------------------  Upload Title -------------------->
@@ -24,14 +28,10 @@
             </div>
 <!--------------------  Upload-Image -------------------->
             <div class="row">
-                <div class="file-field input-field">
-                    <div class="btn">
-                        <span>Image</span>
-                        <input id="upload_image" name="upload_image" type="file">
-                    </div>
-                    <div class="file-path-wrapper">
-                        <input class="file-path validate" type="text">
-                    </div>
+                <div class="input-field col s12">
+                    <input id="upload_image" name="upload_image"
+                        type="text" class="validate">
+                    <label for="upload_image">Please enter the location of your image starting with http(s)://</label>
                 </div>
             </div>
 <!--------------------  Upload-Description -------------------->
@@ -44,7 +44,7 @@
             </div>
 <!--------------------  Upload-Button -------------------->
             <div class="row">
-                <button class="col s12 m5 btn-large waves-effect waves-light" type="submit">
+                <button class="col s12 m5 btn-large waves-effect waves-light #ffa726 orange lighten-1" type="submit">
                     Upload!<i class="fas fa-paper-plane right"></i>
                 </button>
             </div>
