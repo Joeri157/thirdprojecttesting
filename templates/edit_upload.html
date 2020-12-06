@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-    <h3 class="light-blue center-align">Edit Upload</h3>
+    <h3 class="#ffa726 orange lighten-1 center-align">Edit Upload</h3>
 
 <!--------------------  Adding Upload -------------------->
     <div class="row">
@@ -24,15 +24,13 @@
             </div>
 <!--------------------  Upload-Image -------------------->
             <div class="row">
-                <div class="file-field input-field">
-                    <div class="btn">
-                        <span>Image</span>
-                        <input id="upload_image" name="upload_image"
-                            value="{{ upload.upload_image }}" type="file">
-                    </div>
-                    <div class="file-path-wrapper">
-                        <input class="file-path validate" type="text">
-                    </div>
+                <div class="input-field col s12">
+                    <input id="upload_image" name="upload_image"
+                        type="text" class="validate" disabled>
+                    <label for="upload_image">Please enter the location of your image starting with http(s)://</label>
+                </div>
+                <div class="card-image">
+                    <img src="{{ upload.upload_image }}">
                 </div>
             </div>
 <!--------------------  Upload-Description -------------------->
@@ -53,7 +51,7 @@
                         Cancel!<i class="fas fa-times-circle right"></i>
                     </a>
 <!--------------------  Edit-Button -------------------->        
-                    <button class="btn-small waves-effect waves-light" type="submit">
+                    <button class="btn-small waves-effect waves-light #ffa726 orange lighten-1" type="submit">
                         Edit Upload!<i class="fas fa-edit right"></i>
                     </button>
                 </div>
