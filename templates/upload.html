@@ -5,7 +5,7 @@
     <div class="container">   
         <div class="row">
             <div class="col s12">
-                <div class="card">
+                <div class="card #f5f5f5 grey lighten-4">
                     <div class="row">
                         <div class="custom-upload-category col s6 ">
                             {{ upload.category_name }}
@@ -20,16 +20,16 @@
                     <div class="card-image">
                         <img src="{{ upload.upload_image }}">
                     </div>
-                    <div class="card-content">
+                    <div class="card-content custom-upload-content">
                         <p>{{ upload.upload_description}}</p>
-                        <p>by: {{ upload.uploaded_by }}</p>
+                        <p class="custom-upload-by">by: {{ upload.uploaded_by }}</p>
                     </div>
                 </div>
                 {% if session.user|lower == upload.uploaded_by|lower %}
                     <div class="row">
                         <div class="col s12">
                             <a href="{{ url_for('delete_upload', id=upload._id) }}" class="btn-small red accent-4">Delete</a>
-                            <a href="{{ url_for('edit_upload', id=upload._id) }}" class="btn-small light-blue lighten-1">Edit</a>
+                            <a href="{{ url_for('edit_upload', id=upload._id) }}" class="btn-small #ffa726 orange lighten-1">Edit</a>
                         </div>
                     </div>
                 {% endif %}            
@@ -46,7 +46,7 @@
                                 maxlength="300" class="materialize-textarea" data-length="300"></textarea>
                             <label for="comment_description">Comment description</label>
                         </div>                
-                        <button class="btn-small waves-effect waves-light" type="submit">
+                        <button class="btn-small waves-effect waves-light #ffa726 orange lighten-1" type="submit">
                             Add comment<i class="fas fa-comment right"></i>
                         </button>
                     </div>
