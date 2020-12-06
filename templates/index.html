@@ -2,12 +2,30 @@
 {% block content %} 
 
     <div class="container">
-
+<!-------------------- Search bar -------------------->
+        <div class="row card-panel grey lighten-5">
+            <form action="{{ url_for('search') }}" method="post" class="col s12">
+                <div class="row valign-wrapper center-align">
+                    <div class="input-field col s12 m8">
+                        <i class="fas fa-search prefix light-blue-text text-darken-4"></i>
+                        <input type="text" name="query" id="query" minlength="3" class="validate" required>
+                        <label for="query">Search</label>
+                    </div>
+                    <div class="col s12 m4">
+                        <a href="{{ url_for('index') }}" class="red btn text-shadow">Reset</a>
+                        <button type="submit" class="#ffa726 orange lighten-1 btn text-shadow">
+                            <i class="fas fa-search left"></i> Search
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
 <!-------------------- Uploaded content -------------------->
+        {% if uploads|length > 0 %}
         <div class="row">
             <div class="col s12 m12 l8">
                 {% for upload in uploads %}
-                    <div class="card upload-content" style="display: none;">
+                    <div class="card upload-content #f5f5f5 grey lighten-4" style="display: none;">
                             <div class="row">
 <!-------------------- Category Name -------------------->
                                 <div class="custom-upload-category col s6 ">
@@ -25,27 +43,39 @@
                                 <div class="card-image">
                                     <img src="{{ upload.upload_image }}">
                                 </div>
-                                <div class="card-content">
+                                <div class="card-content custom-upload-content">
                                     <p>{{ upload.upload_description}}</p>
 <!-------------------- Only shows when the session user and uploaded by matches -------------------->  
                                     {% if session.user|lower == upload.uploaded_by|lower %}
-                                        <p>by: {{ upload.uploaded_by }}</p>
+                                        <p class="custom-upload-by">by: {{ upload.uploaded_by }}</p>
                                     {% endif %}
                                 </div>
                             </a>
                     </div> 
                 {% endfor %}
 <!-------------------- Load more button -------------------->
-                <div class="row center-align">
-                    <a class="btn-small loadmore">
+                <div class="row center-align ">
+                    <a class="btn-small loadmore #ffa726 orange lighten-1">
                         Load more<i class="fas fa-paper-plane right"></i>
                     </a>
                 </div>              
             </div>
-<!-------------------- Extra small space for categories / tags list -------------------->
-            <div class="col s12 m12 l3">
+<!-------------------- Extra small space for categories -------------------->
+            <div class="col hide-on-med-and-down l3">
+                {% for category in categories %}
+                    <div class="row custom-side-category">
+                        <div class="card #ffa726 orange lighten-1 center-align">
+                            <div class="card-content white-text side-card-category">
+                                <a href="{{ url_for('category_page', category_name=category.category_name) }}">
+                                    <span class="custom-category-name">{{ category.category_name }}</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% else %}
+                    <h3 class="red-text text-darken-4 center-align">Nothing Found</h3>
+                {% endif %}
             </div>
-        </div>
-    </div>
 
 {% endblock %}
