@@ -13,6 +13,24 @@ main {
     flex: 1 0 auto;
 }
 
+.custom-dropdown li>a {
+    font-weight: bold;
+    font-size: 2rem;
+    color: white;
+}
+
+.fab {
+    font-size: 2rem;
+}
+
+.custom-side-category {
+    margin-bottom: 0;
+}
+
+.card .side-card-category {
+    padding: 0;
+}
+
 /* customized for category name */
 .card .row .custom-upload-category {
     font-weight: bold;
@@ -45,4 +63,39 @@ main {
     font-size: 1rem;
     margin: 0;
     color: lightgrey;
+}
+
+.card .row {
+    margin-bottom: 0;
+}
+
+.card a .custom-upload-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: black;
+}
+
+.card .custom-upload-content {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: black;
+    padding: 0 1rem 0 1rem;
+}
+
+.card .custom-upload-by {
+    color: #00000075;
+    font-size: 1rem;
+    padding: 0;
+}
+
+.card .custom-upload-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: black;
+}
+
+.card .card-content a .custom-category-name {
+    color: white;
+    font-weight: bold;
+    font-size: 2rem;
 }
