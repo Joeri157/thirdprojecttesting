@@ -36,9 +36,11 @@ client = Client("AYGc8VBXRTGi7hUQdYZnIz")
 @app.route("/")  # refers to the default route
 @app.route("/index")
 def index():
+    categories = list(mongo.db.categories.find().sort("category_name", 1))
     uploads = list(
         mongo.db.uploads.find().sort("upload_time", -1))  # .limit(2)
-    return render_template("index.html", uploads=uploads)
+    return render_template(
+        "index.html", uploads=uploads, categories=categories)
 
 
 #  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
@@ -140,6 +142,7 @@ def logout():
 
 @app.route("/add_upload", methods=["GET", "POST"])
 def add_upload():
+    categories = mongo.db.categories.find().sort("category_name", 1)
     if request.method == "POST":
         upload = {
             "category_name": request.form.get("catergory_name"),
@@ -154,7 +157,7 @@ def add_upload():
                 session["user"]))
         return redirect(url_for("index"))
 
-    return render_template("add_upload.html")
+    return render_template("add_upload.html", categories=categories)
 
 
 #  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
@@ -212,6 +215,8 @@ def add_comment(id):
             {"_id": ObjectId(id)},
             {"$push": {"comments": new_comment}}
         )
+        flash(
+            "Comment succesfully added, {}".format(session["user"]))
         return redirect(request.referrer)
 
     return render_template(request.referrer, upload=upload)
@@ -256,17 +261,17 @@ def delete_comment(id):
 
 @app.route("/all_categories")
 def all_categories():
-    uploads = mongo.db.uploads.find().sort("category_name", 1)
-    return render_template("all_categories.html", uploads=uploads)
+    categories = list(mongo.db.categories.find().sort("category_name", 1))
+    return render_template("all_categories.html", categories=categories)
 
 
 #  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
 #  Browse categories                                                          #
 #  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
 
-@app.route("/category_page/<upload_id>", methods=["GET"])
-def category_page(upload_id):
-    uploads = list(mongo.db.uploads.find({"_id": ObjectId(upload_id)}))
+@app.route("/category_page/<category_name>", methods=["GET"])
+def category_page(category_name):
+    uploads = mongo.db.uploads.find({"category_name": category_name})
     return render_template("category.html", uploads=uploads)
 
 
@@ -278,6 +283,17 @@ def category_page(upload_id):
 def upload_page(id):
     upload = mongo.db.uploads.find_one({"_id": ObjectId(id)})
     return render_template("upload.html", upload=upload)
+
+
+#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
+#  Search                                                                     #
+#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
+
+@app.route("/search", methods=["GET", "POST"])
+def search():
+    query = request.form.get("query")
+    uploads = list(mongo.db.uploads.find({"$text": {"$search": query}}))
+    return render_template("index.html", uploads=uploads)
 
 
 #  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  #
